@@ -7,6 +7,7 @@ import './index.css';
 
 function App() {
   const [isAIOpen, setIsAIOpen] = useState(false);
+  const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
 
   return (
     <div className="app-container">
@@ -24,13 +25,57 @@ function App() {
         <div style={{ flex: 1, overflowY: 'hidden' }}>
           <Editor />
         </div>
+
+        {/* Mobile-only Bottom Bar: PDF preview toggle + download hint */}
+        <div className="mobile-bottom-bar">
+          <button
+            className="mobile-preview-toggle"
+            onClick={() => setIsMobilePreviewOpen(v => !v)}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 12H15M9 16H15M9 8H15M5 3H19C19.5523 3 20 3.44772 20 4V20C20 20.5523 19.5523 21 19 21H5C4.44772 21 4 20.5523 4 20V4C4 3.44772 4.44772 3 5 3Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            {isMobilePreviewOpen ? 'Скрыть резюме' : 'Предпросмотр резюме'}
+          </button>
+        </div>
       </aside>
 
-      {/* Main: Live Preview — hidden on mobile */}
+      {/* Desktop: Live Preview */}
       <main className="preview-area">
         <Preview />
       </main>
 
+      {/* Mobile: Full-Screen Preview Drawer (slides up from bottom) */}
+      <AnimatePresence>
+        {isMobilePreviewOpen && (
+          <>
+            <motion.div
+              className="mobile-preview-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobilePreviewOpen(false)}
+            />
+            <motion.div
+              className="mobile-preview-drawer"
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 250 }}
+            >
+              <div className="mobile-preview-handle" onClick={() => setIsMobilePreviewOpen(false)}>
+                <div className="mobile-preview-handle-bar" />
+                <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Нажмите чтобы закрыть</span>
+              </div>
+              <div style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>
+                <Preview />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* AI Floating Action Button (FAB) */}
       <motion.button
         className="ai-fab"
         onClick={() => setIsAIOpen(true)}
