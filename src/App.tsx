@@ -26,12 +26,11 @@ function App() {
         </div>
       </aside>
 
-      {/* Main: Live Preview */}
+      {/* Main: Live Preview — hidden on mobile */}
       <main className="preview-area">
         <Preview />
       </main>
 
-      {/* AI Floating Action Button (FAB) */}
       <motion.button
         className="ai-fab"
         onClick={() => setIsAIOpen(true)}
