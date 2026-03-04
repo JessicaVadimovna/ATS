@@ -46,23 +46,25 @@ ${JSON.stringify(resumeData, null, 2)}
 }
 `;
 
+    let backendFailed = false;
+
     try {
-        // Запрос идет к НАШЕМУ защищенному backend-серверу (Vercel Serverless Function)
-        // Если мы на localhost и сервер не поднят, это упадет в блок catch
+        // Запрос к нашему Vercel Serverless Function
         const response = await fetch("/api/analyze", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ prompt }),
         });
 
         if (!response.ok) {
-            throw new Error(`Внутренний сервер вернул ошибку: ${response.status}`);
+            // Читаем реальный текст ошибки с сервера
+            const errBody = await response.text().catch(() => 'no body');
+            // Бросаем с пометкой что это ошибка СЕРВЕРА (не сети), чтобы пробросить её в UI
+            throw new Error(`SERVER:${response.status}:${errBody}`);
         }
 
-        const data = await response.json();
-        const parsedResponse = typeof data === 'string' ? JSON.parse(data) : data;
+        const responseText = await response.text();
+        const parsedResponse = JSON.parse(responseText);
 
         const formattedSuggestions: ActionableSuggestion[] = parsedResponse.suggestions.map((s: any, index: number) => ({
             ...s,
@@ -76,10 +78,21 @@ ${JSON.stringify(resumeData, null, 2)}
         };
 
     } catch (error: any) {
-        console.warn("Backend /api/analyze недоступен (локальная разработка без Vercel CLI). Включаю резервный локальный Mock...", error);
+        const msg: string = error?.message || String(error);
+        console.error("[AI] Ошибка:", msg);
 
-        // ВНИМАНИЕ: Если бэкенд недоступен (например, при локальной отрисовке через npm run dev без Vercel CLI), 
-        // мы возвращаем красивый Mock, чтобы UI не ломался.
+        // Если сервер ответил ошибкой (SERVER:...) — показываем реальную причину, NOT mock
+        if (msg.startsWith('SERVER:')) {
+            backendFailed = true;
+            throw new Error(`Ошибка AI-сервера: ${msg.replace('SERVER:', '')}`);
+        }
+
+        // Иначе — сетевая ошибка (localhost без Vercel CLI), показываем mock
+        console.warn("[AI] Сервер недоступен по сети, включаю локальный Mock...");
+    }
+
+    // Mock fallback (только для локальной разработки без Vercel CLI)
+    if (!backendFailed) {
         return new Promise((resolve) => {
             setTimeout(() => {
                 const hasReact = jobDescription.toLowerCase().includes('react');
@@ -88,27 +101,27 @@ ${JSON.stringify(resumeData, null, 2)}
 
                 if (hasReact && !resumeData.skills.some(s => s.name.toLowerCase().includes('redux'))) {
                     dynamicSuggestions.push({
-                        id: `ai-sug-${Date.now()}-1`, text: "Вакансия требует глубокого знания React. Рекомендую добавить 'Redux Toolkit' или 'Zustand' в навыки.", type: 'add_skill', payload: { name: 'Redux Toolkit', level: 4 }, isApplied: false
+                        id: `ai-sug-${Date.now()}-1`, text: "[Mock] Вакансия требует React. Добавьте 'Redux Toolkit' в навыки.", type: 'add_skill', payload: { name: 'Redux Toolkit', level: 4 }, isApplied: false
                     });
                 } else {
                     dynamicSuggestions.push({
-                        id: `ai-sug-${Date.now()}-1`, text: "Обязательно добавьте 'CI/CD Pipeline' в раздел навыков.", type: 'add_skill', payload: { name: 'CI/CD (GitLab/Actions)', level: 4 }, isApplied: false
+                        id: `ai-sug-${Date.now()}-1`, text: "[Mock] Добавьте 'CI/CD Pipeline' в раздел навыков.", type: 'add_skill', payload: { name: 'CI/CD (GitLab/Actions)', level: 4 }, isApplied: false
                     });
                 }
 
                 dynamicSuggestions.push({
-                    id: `ai-sug-${Date.now()}-2`, text: "Замените общие фразы на достижения в цифрах.", type: 'update_experience', payload: { experienceId: resumeData.experience[0]?.id || 'exp-1', newDescription: (resumeData.experience[0]?.description || '') + '\nОптимизировал производительность бандла с помощью Webpack/Vite, уменьшив время загрузки на 35%.' }, isApplied: false
+                    id: `ai-sug-${Date.now()}-2`, text: "[Mock] Замените общие фразы на достижения в цифрах.", type: 'update_experience', payload: { experienceId: resumeData.experience[0]?.id || 'exp-1', newDescription: (resumeData.experience[0]?.description || '') + '\nОптимизировал производительность бандла, уменьшив время загрузки на 35%.' }, isApplied: false
                 });
 
                 dynamicSuggestions.push({
-                    id: `ai-sug-${Date.now()}-3`, text: "Сделайте 'Summary' сфокусированным на бизнес-результатах.", type: 'update_summary', payload: { newSummary: (resumeData.personalInfo.summary || '') + ' Проектирую масштабируемую архитектуру Frontend-приложений с нуля до Production.' }, isApplied: false
+                    id: `ai-sug-${Date.now()}-3`, text: "[Mock] Сделайте 'Summary' сфокусированным на бизнес-результатах.", type: 'update_summary', payload: { newSummary: (resumeData.personalInfo.summary || '') + ' Проектирую масштабируемую архитектуру Frontend-приложений с нуля до Production.' }, isApplied: false
                 });
 
-                resolve({
-                    score: baseScore,
-                    suggestions: dynamicSuggestions
-                });
+                resolve({ score: baseScore, suggestions: dynamicSuggestions });
             }, 1000);
         });
     }
+
+    // TypeScript satisfy — never reached
+    throw new Error("Unexpected state");
 };
