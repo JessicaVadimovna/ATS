@@ -2,12 +2,14 @@ import { useState } from 'react';
 import Editor from './components/Editor/Editor';
 import Preview from './components/Preview/Preview';
 import AIAssistantForm from './components/Editor/AIAssistantForm';
+import { useResume } from './context/ResumeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import './index.css';
 
 function App() {
   const [isAIOpen, setIsAIOpen] = useState(false);
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
+  const { isSaved } = useResume();
 
   return (
     <div className="app-container">
@@ -17,8 +19,20 @@ function App() {
           <h1 className="accent-gradient-text" style={{ fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span role="img" aria-label="sparkles">✨</span> AI Resume Builder
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             Подгоните резюме под идеальную вакансию
+            <AnimatePresence>
+              {isSaved && (
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  style={{ color: '#4ade80', fontSize: '0.75rem', fontWeight: 600 }}
+                >
+                  ✓ Сохранено
+                </motion.span>
+              )}
+            </AnimatePresence>
           </p>
         </div>
 

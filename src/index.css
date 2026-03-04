@@ -89,10 +89,13 @@ select {
   font-family: inherit;
   color: inherit;
   background: var(--bg-input);
-  border: 1px solid var(--border-color);
+  border: 1.5px solid var(--border-color);
   border-radius: var(--radius-sm);
   padding: 0.75rem 1rem;
-  transition: all var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast);
   outline: none;
   width: 100%;
 }
@@ -100,7 +103,28 @@ select {
 input:focus,
 textarea:focus {
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.15);
+  background: rgba(44, 44, 46, 0.95);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+/* Form field wrapper */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.form-field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
 }
 
 /* Custom Scrollbar */
