@@ -1,7 +1,7 @@
 import type { ResumeData } from "../types/resume";
 
-// Сюда мы вставим ключ от OpenRouter (например: sk-or-v1-...)
-const API_KEY = "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";
+// Файл openrouter.ts сохраняется как резервный (не используется в основной логике)
+// Основной API-прокси находится в api/analyze.js (Vercel Serverless Function)
 
 export type ActionableSuggestion = {
     id: string;
@@ -24,7 +24,7 @@ export const analyzeResume = async (resumeData: ResumeData, jobDescription: stri
     return new Promise((resolve) => {
         setTimeout(() => {
             const hasReact = jobDescription.toLowerCase().includes('react');
-            const hasTypescript = jobDescription.toLowerCase().includes('typescript');
+
 
             const baseScore = Math.floor(Math.random() * 20) + 70; // 70 to 90
 
