@@ -1,7 +1,7 @@
 import type { ResumeData } from "../types/resume";
 
-// Файл openrouter.ts сохраняется как резервный (не используется в основной логике)
-// Основной API-прокси находится в api/analyze.js (Vercel Serverless Function)
+// Файл openrouter.ts сохраняется как резервный fallback (не используется в основной логике)
+// Основной AI-прокси находится в api/analyze.js (Vercel Serverless Function)
 
 export type ActionableSuggestion = {
     id: string;
@@ -17,20 +17,15 @@ export type AIAnalysisResult = {
 };
 
 export const analyzeResume = async (resumeData: ResumeData, jobDescription: string): Promise<AIAnalysisResult> => {
-    // ВНИМАНИЕ: Из-за нестабильности бесплатных API (OpenRouter 404 / Google 400 Region Block)
-    // мы используем надежную локальную заглушку (Mock), чтобы приложение оставалось 
-    // впечатляющим и полностью функциональным для демонстрации в портфолио.
-
+    // Локальный Mock, который активируется если backend /api/analyze недоступен
     return new Promise((resolve) => {
         setTimeout(() => {
             const hasReact = jobDescription.toLowerCase().includes('react');
 
-
-            const baseScore = Math.floor(Math.random() * 20) + 70; // 70 to 90
+            const baseScore = Math.floor(Math.random() * 20) + 70;
 
             const dynamicSuggestions: ActionableSuggestion[] = [];
 
-            // Динамический совет 1: Навыки
             if (hasReact && !resumeData.skills.some(s => s.name.toLowerCase().includes('redux'))) {
                 dynamicSuggestions.push({
                     id: `ai-sug-${Date.now()}-1`,
@@ -49,7 +44,6 @@ export const analyzeResume = async (resumeData: ResumeData, jobDescription: stri
                 });
             }
 
-            // Динамический совет 2: Опыт работы
             dynamicSuggestions.push({
                 id: `ai-sug-${Date.now()}-2`,
                 text: "В вашем опыте работы не хватает измеримых метрик. Замените общие фразы на достижения в цифрах (например: 'оптимизировал производительность на 35%').",
@@ -58,7 +52,6 @@ export const analyzeResume = async (resumeData: ResumeData, jobDescription: stri
                 isApplied: false
             });
 
-            // Динамический совет 3: Summary
             const currentSummary = resumeData.personalInfo.summary || '';
             dynamicSuggestions.push({
                 id: `ai-sug-${Date.now()}-3`,
@@ -72,6 +65,6 @@ export const analyzeResume = async (resumeData: ResumeData, jobDescription: stri
                 score: baseScore,
                 suggestions: dynamicSuggestions
             });
-        }, 1500); // 1.5 секунды фейковой задержки для реалистичности
+        }, 1500);
     });
 };
