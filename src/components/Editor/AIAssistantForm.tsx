@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useResume } from '../../context/ResumeContext';
-import { analyzeResume, type ActionableSuggestion } from '../../api/openrouter';
+import { analyzeResume, type ActionableSuggestion } from '../../api/gemini';
 
 const AIAssistantForm: React.FC = () => {
     const { data, setData } = useResume();
