@@ -1,73 +1,63 @@
-# React + TypeScript + Vite
+# JessiLis AI Resume Builder & ATS Optimizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Logo](/public/logo.png)
 
-Currently, two official plugins are available:
+**JessiLis AI Resume Builder** — это современный инструмент для создания профессиональных резюме, оптимизированных для систем автоматического отбора кандидатов (ATS). Проект сочетает в себе дерзкий дизайн в стиле "Необрутализм" и мощные возможности искусственного интеллекта.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Основные возможности
 
-## React Compiler
+- **AI Co-Pilot**: Интегрированный ИИ-помощник для анализа вакансий и выдачи персональных рекомендаций по улучшению резюме.
+- **Интерактивный Drag-and-Drop редактор**: Легко меняйте порядок разделов и записей внутри них.
+- **Мгновенный Live Preview**: Смотрите, как выглядит ваше резюме в формате A4 в режиме реального времени.
+- **Mobile-First UX**: Специальные контроллеры для мобильных устройств и возможность быстрого открытия PDF в новой вкладке.
+- **Neo-Brutalism Design**: Уникальный интерфейс с высокой контрастностью, жесткими границами и акцентом на структуру.
+- **Чистый экспорт**: Генерация качественных PDF-файлов, готовых к отправке рекрутерам.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠 Технологический стек
 
-## Expanding the ESLint configuration
+- **React + TypeScript**: Основа приложения.
+- **Vite**: Сверхбыстрая сборка и разработка.
+- **Framer Motion**: Плавные анимации интерфейса.
+- **@hello-pangea/dnd**: Надежный Drag-and-drop для структуры резюме.
+- **html2pdf.js**: Конвертация HTML-верстки в PDF.
+- **CSS Variables**: Кастомная дизайн-система.
+- **Vercel Serverless**: Прокси-сервер для безопасных запросов к AI API.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Быстрый старт
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Требования
+- Node.js (версия 18 или выше)
+- npm или yarn
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Установка
+1. Клонируйте репозиторий.
+2. Установите зависимости:
+   ```bash
+   npm install
+   ```
+3. Создайте файл `.env` в корне проекта (если необходимо для работы ИИ через прокси).
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Запуск
+```bash
+npm run dev
 ```
+Приложение будет доступно по адресу `http://localhost:5173`.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🤖 Логика AI Co-Pilot
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+AI Assistant спроектирован так, чтобы быть вашим персональным карьерным консультантом:
+1. Вы вставляете описание вакансии (Job Description).
+2. Система анализирует ключевые навыки и требования.
+3. Вы получаете конкретные советы по перефразированию опыта работы для прохождения фильтров ATS.
+4. Оценка совпадения (Match Score) помогает понять, насколько вы подходите под требования.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 📐 Структура проекта
+
+- `src/components/Editor`: Формы редактирования и логика управления данными.
+- `src/components/Preview`: Компоненты отрисовки резюме и PDF-генерации.
+- `src/context`: Глобальное состояние резюме (ResumeContext).
+- `api/`: Серверные функции (Vercel) для взаимодействия с API.
+- `public/`: Статические ресурсы (логотип, иконка).
+
+---
+Создано с любовью к коду и дизайну. ✨
