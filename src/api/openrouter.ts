@@ -1,7 +1,6 @@
 import type { ResumeData } from "../types/resume";
 
 // Файл openrouter.ts сохраняется как резервный fallback (не используется в основной логике)
-// Основной AI-прокси находится в api/analyze.js (Vercel Serverless Function)
 
 export type ActionableSuggestion = {
     id: string;
@@ -68,3 +67,6 @@ export const analyzeResume = async (resumeData: ResumeData, jobDescription: stri
         }, 1500);
     });
 };
+
+
+
