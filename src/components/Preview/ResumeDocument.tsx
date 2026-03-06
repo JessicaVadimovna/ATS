@@ -97,26 +97,26 @@ const ResumeDocument: React.FC = () => {
 
             case 'skills':
                 return skills.length > 0 && (
-                    <div key="skills" style={{ marginBottom: '1.5rem' }}>
-                        <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em', borderBottom: '2px solid #e2e8f0', paddingBottom: '0.5rem', marginBottom: '1.25rem' }}>
+                    <div key="skills" style={{ marginBottom: '1.25rem' }}>
+                        <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em', borderBottom: '2px solid #e2e8f0', paddingBottom: '0.4rem', marginBottom: '1rem' }}>
                             Навыки
                         </h3>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
                             {skills.map(skill => (
                                 <span
                                     key={skill.id}
                                     style={{
                                         background: '#f1f5f9',
                                         color: '#334155',
-                                        padding: '0.35rem 0.85rem',
-                                        borderRadius: '6px', /* more elegant than full pill for a pro resume */
+                                        padding: '0.3rem 0.75rem',
+                                        borderRadius: '4px',
                                         border: '1px solid #e2e8f0',
-                                        fontSize: '0.85rem',
+                                        fontSize: '0.8rem',
                                         fontWeight: 500,
                                         letterSpacing: '0.02em'
                                     }}
                                 >
-                                    {skill.name} {skill.level >= 4 ? '⭐' : ''}
+                                    {skill.name}
                                 </span>
                             ))}
                         </div>

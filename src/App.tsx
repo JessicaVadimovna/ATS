@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import html2pdf from 'html2pdf.js';
 import Editor from './components/Editor/Editor';
 import Preview from './components/Preview/Preview';
+import ResumeDocument from './components/Preview/ResumeDocument';
 import AIAssistantForm from './components/Editor/AIAssistantForm';
 import { useResume } from './context/ResumeContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,17 +10,47 @@ import './index.css';
 
 function App() {
   const [isAIOpen, setIsAIOpen] = useState(false);
-  const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
-  const { isSaved } = useResume();
+  const [isExportingMobile, setIsExportingMobile] = useState(false);
+  const hiddenResumeRef = useRef<HTMLDivElement>(null);
+  const { isSaved, data } = useResume();
+
+  const handleMobileExport = () => {
+    if (!hiddenResumeRef.current) return;
+
+    setIsExportingMobile(true);
+    const element = hiddenResumeRef.current;
+
+    const opt: any = {
+      margin: 0,
+      filename: `resume_${data.personalInfo.fullName.replace(/\s+/g, '_')}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).outputPdf('bloburl').then((pdfUrl: string) => {
+      window.open(pdfUrl, '_blank');
+      setIsExportingMobile(false);
+    });
+  };
 
   return (
     <div className="app-container">
+      {/* Hidden container for mobile PDF generation */}
+      <div style={{ position: 'fixed', left: '-9999px', top: 0, width: '794px', height: '1123px' }}>
+        <div ref={hiddenResumeRef} style={{ width: '100%', height: '100%', backgroundColor: '#fff' }}>
+          <ResumeDocument />
+        </div>
+      </div>
+
       {/* Sidebar: Editor */}
       <aside className="sidebar">
         <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
-          <h1 className="accent-gradient-text" style={{ fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span role="img" aria-label="sparkles">✨</span> JessiLis AI Resume Builder
-          </h1>
+          <img
+            src="/logo.png"
+            alt="JessiLis AI Resume Builder"
+            style={{ maxHeight: '40px', display: 'block', marginBottom: '0.25rem' }}
+          />
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             Подгоните резюме под идеальную вакансию
             <AnimatePresence>
@@ -40,16 +72,17 @@ function App() {
           <Editor />
         </div>
 
-        {/* Mobile-only Bottom Bar: PDF preview toggle + download hint */}
+        {/* Mobile-only Bottom Bar: Direct PDF Download */}
         <div className="mobile-bottom-bar">
           <button
             className="mobile-preview-toggle"
-            onClick={() => setIsMobilePreviewOpen(v => !v)}
+            onClick={handleMobileExport}
+            disabled={isExportingMobile}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9 12H15M9 16H15M9 8H15M5 3H19C19.5523 3 20 3.44772 20 4V20C20 20.5523 19.5523 21 19 21H5C4.44772 21 4 20.5523 4 20V4C4 3.44772 4.44772 3 5 3Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 16V17C4 18.6569 5.34315 20 7 20H17C18.6569 20 20 18.6569 20 17V16M16 12L12 16M12 16L8 12M12 16V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            {isMobilePreviewOpen ? 'Скрыть резюме' : 'Предпросмотр резюме'}
+            {isExportingMobile ? 'Сборка PDF...' : 'ПОКАЗАТЬ PDF'}
           </button>
         </div>
       </aside>
@@ -58,36 +91,6 @@ function App() {
       <main className="preview-area">
         <Preview />
       </main>
-
-      {/* Mobile: Full-Screen Preview Drawer (slides up from bottom) */}
-      <AnimatePresence>
-        {isMobilePreviewOpen && (
-          <>
-            <motion.div
-              className="mobile-preview-overlay"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMobilePreviewOpen(false)}
-            />
-            <motion.div
-              className="mobile-preview-drawer"
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 250 }}
-            >
-              <div className="mobile-preview-handle" onClick={() => setIsMobilePreviewOpen(false)}>
-                <div className="mobile-preview-handle-bar" />
-                <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Нажмите чтобы закрыть</span>
-              </div>
-              <div style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>
-                <Preview />
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
 
       {/* AI Floating Action Button (FAB) */}
       <motion.button
