@@ -63,17 +63,20 @@ const PersonalInfoForm: React.FC = () => {
                 animate={{ opacity: activeTip ? 1 : 0, y: activeTip ? 0 : -6 }}
                 transition={{ duration: 0.2 }}
                 style={{
-                    background: 'linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08))',
-                    border: '1px solid rgba(99,102,241,0.25)',
-                    borderRadius: 'var(--radius-md)',
+                    background: 'var(--bg-secondary)',
+                    border: '2px solid var(--accent-primary)',
                     padding: '0.6rem 0.9rem',
                     fontSize: '0.8rem',
-                    color: 'var(--text-secondary)',
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    color: 'var(--text-primary)',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.5rem',
                     minHeight: '2.4rem',
                     pointerEvents: 'none',
+                    boxShadow: '4px 4px 0px var(--accent-primary)',
+                    marginBottom: '1rem'
                 }}
             >
                 {activeTip && <><span>{activeTip.icon}</span><span>{activeTip.hint}</span></>}
@@ -181,8 +184,8 @@ const PersonalInfoForm: React.FC = () => {
                         width: `${Math.min(summaryRatio * 100, 100)}%`,
                         background: summaryRatio > 0.9
                             ? '#f87171'
-                            : 'linear-gradient(90deg, var(--accent-primary), var(--accent-secondary))',
-                        borderRadius: '0 0 var(--radius-sm) var(--radius-sm)',
+                            : 'var(--accent-primary)',
+                        borderRadius: '0',
                         transition: 'width 0.3s ease, background 0.3s ease',
                     }} />
                 </div>

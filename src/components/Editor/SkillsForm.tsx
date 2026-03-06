@@ -52,11 +52,10 @@ const SkillsForm: React.FC = () => {
             <button
                 onClick={handleAdd}
                 style={{
-                    background: 'var(--bg-input)',
-                    border: '1px dashed var(--border-color)',
+                    background: 'var(--text-primary)',
+                    border: '2px solid var(--text-inverted)',
                     padding: '0.75rem',
-                    borderRadius: 'var(--radius-sm)',
-                    color: 'var(--text-primary)',
+                    color: 'var(--bg-primary)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -86,8 +85,7 @@ const SkillsForm: React.FC = () => {
                                             style={{
                                                 ...provided.draggableProps.style,
                                                 background: 'var(--bg-secondary)',
-                                                border: '1px solid var(--border-color)',
-                                                borderRadius: 'var(--radius-sm)',
+                                                border: '2px solid var(--border-color)',
                                                 padding: '0.75rem 1rem',
                                                 boxShadow: snapshot.isDragging ? 'var(--shadow-md)' : 'none',
                                                 opacity: snapshot.isDragging ? 0.9 : 1,
@@ -115,22 +113,17 @@ const SkillsForm: React.FC = () => {
                                                     onChange={e => handleChange(skill.id, 'name', e.target.value)}
                                                     style={{ flex: 1 }}
                                                 />
-                                                <select
-                                                    value={skill.level}
-                                                    onChange={e => handleChange(skill.id, 'level', parseInt(e.target.value))}
-                                                    style={{ width: '120px' }}
-                                                >
-                                                    <option value={1}>Новичок</option>
-                                                    <option value={2}>Базовый</option>
-                                                    <option value={3}>Средний</option>
-                                                    <option value={4}>Продвинутый</option>
-                                                    <option value={5}>Эксперт</option>
-                                                </select>
                                             </div>
 
                                             <button
                                                 onClick={() => handleDelete(skill.id)}
-                                                style={{ color: 'var(--text-muted)' }}
+                                                style={{
+                                                    background: 'transparent',
+                                                    border: 'none',
+                                                    boxShadow: 'none',
+                                                    color: 'var(--text-muted)',
+                                                    padding: 0
+                                                }}
                                                 onMouseOver={e => e.currentTarget.style.color = 'var(--danger)'}
                                                 onMouseOut={e => e.currentTarget.style.color = 'var(--text-muted)'}
                                             >

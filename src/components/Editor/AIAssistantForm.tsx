@@ -87,19 +87,24 @@ const AIAssistantForm: React.FC = () => {
                     onClick={handleAnalyze}
                     disabled={isAnalyzing || !jobDescription.trim()}
                     style={{
-                        background: 'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%)',
-                        color: 'white',
+                        background: 'var(--accent-primary)',
+                        color: '#000000',
+                        border: '2px solid #000000',
                         padding: '0.75rem',
-                        borderRadius: 'var(--radius-sm)',
-                        fontWeight: 600,
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
                         gap: '0.5rem',
+                        boxShadow: 'var(--shadow-sm)',
                         opacity: isAnalyzing || !jobDescription.trim() ? 0.5 : 1,
                         cursor: isAnalyzing || !jobDescription.trim() ? 'not-allowed' : 'pointer',
-                        transition: 'all var(--transition-normal)'
+                        transition: 'transform 0.1s, box-shadow 0.1s'
                     }}
+                    onMouseDown={e => { if (!isAnalyzing && jobDescription.trim()) { e.currentTarget.style.transform = 'translate(2px, 2px)'; e.currentTarget.style.boxShadow = 'none'; } }}
+                    onMouseUp={e => { if (!isAnalyzing && jobDescription.trim()) { e.currentTarget.style.transform = 'translate(0, 0)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; } }}
+                    onMouseLeave={e => { e.currentTarget.style.transform = 'translate(0, 0)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; }}
                 >
                     {isAnalyzing ? (
                         <>

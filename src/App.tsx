@@ -17,7 +17,7 @@ function App() {
       <aside className="sidebar">
         <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
           <h1 className="accent-gradient-text" style={{ fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span role="img" aria-label="sparkles">✨</span> AI Resume Builder
+            <span role="img" aria-label="sparkles">✨</span> JessiLis AI Resume Builder
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             Подгоните резюме под идеальную вакансию

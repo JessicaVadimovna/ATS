@@ -10,9 +10,9 @@ const Editor: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'personal' | 'experience' | 'education' | 'skills' | 'sections'>('personal');
 
     const tabs = [
-        { id: 'personal', label: 'Основное' },
+        { id: 'personal', label: 'Инфо' },
         { id: 'experience', label: 'Опыт' },
-        { id: 'education', label: 'Образование' },
+        { id: 'education', label: 'Учеба' },
         { id: 'skills', label: 'Навыки' },
         { id: 'sections', label: 'Порядок' },
     ] as const;
@@ -23,8 +23,8 @@ const Editor: React.FC = () => {
             <div style={{
                 display: 'flex',
                 borderBottom: '1px solid var(--border-color)',
-                padding: '0 1.5rem',
-                gap: '1rem',
+                padding: '0 0.5rem',
+                gap: '0.5rem',
                 overflowX: 'auto',
                 scrollbarWidth: 'none' /* Firefox */
             }}>
@@ -33,10 +33,14 @@ const Editor: React.FC = () => {
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id as typeof activeTab)}
                         style={{
-                            padding: '1rem 0',
+                            background: 'transparent',
+                            border: 'none',
                             borderBottom: activeTab === tab.id ? '2px solid var(--accent-primary)' : '2px solid transparent',
+                            padding: '1rem 0.25rem',
                             color: activeTab === tab.id ? 'var(--text-primary)' : 'var(--text-secondary)',
-                            whiteSpace: 'nowrap'
+                            whiteSpace: 'nowrap',
+                            fontSize: '0.8rem',
+                            boxShadow: 'none'
                         }}
                     >
                         {tab.label}

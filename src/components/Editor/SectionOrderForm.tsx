@@ -27,11 +27,12 @@ const SectionOrderForm: React.FC = () => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div style={{
-                background: 'rgba(10, 132, 255, 0.08)',
+                background: 'var(--bg-secondary)',
+                border: '2px solid var(--accent-primary)',
+                boxShadow: '4px 4px 0px var(--accent-primary)',
                 padding: '1rem',
-                borderRadius: 'var(--radius-md)',
                 fontSize: '0.9rem',
-                color: 'var(--text-secondary)',
+                color: 'var(--text-primary)',
                 lineHeight: '1.5'
             }}>
                 <span style={{ fontSize: '1.1rem', marginRight: '0.5rem' }}>ℹ️</span>
@@ -58,8 +59,7 @@ const SectionOrderForm: React.FC = () => {
                                             style={{
                                                 ...provided.draggableProps.style,
                                                 background: 'var(--bg-secondary)',
-                                                border: '0.5px solid var(--border-color)',
-                                                borderRadius: 'var(--radius-md)',
+                                                border: '2px solid var(--border-color)',
                                                 padding: '1rem',
                                                 boxShadow: snapshot.isDragging ? 'var(--shadow-md)' : 'none',
                                                 opacity: snapshot.isDragging ? 0.9 : 1,

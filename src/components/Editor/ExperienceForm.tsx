@@ -52,11 +52,10 @@ const ExperienceForm: React.FC = () => {
             <button
                 onClick={handleAdd}
                 style={{
-                    background: 'var(--bg-input)',
-                    border: '1px dashed var(--border-color)',
+                    background: 'var(--text-primary)',
+                    border: '2px solid var(--text-inverted)',
                     padding: '0.75rem',
-                    borderRadius: 'var(--radius-sm)',
-                    color: 'var(--text-primary)',
+                    color: 'var(--bg-primary)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -86,8 +85,7 @@ const ExperienceForm: React.FC = () => {
                                             style={{
                                                 ...provided.draggableProps.style,
                                                 background: 'var(--bg-secondary)',
-                                                border: '1px solid var(--border-color)',
-                                                borderRadius: 'var(--radius-md)',
+                                                border: '2px solid var(--border-color)',
                                                 padding: '1rem',
                                                 boxShadow: snapshot.isDragging ? 'var(--shadow-md)' : 'none',
                                                 opacity: snapshot.isDragging ? 0.9 : 1,
@@ -106,7 +104,15 @@ const ExperienceForm: React.FC = () => {
                                                 </div>
                                                 <button
                                                     onClick={() => handleDelete(exp.id)}
-                                                    style={{ color: 'var(--danger)', fontSize: '0.875rem' }}
+                                                    style={{
+                                                        background: 'transparent',
+                                                        border: 'none',
+                                                        boxShadow: 'none',
+                                                        color: 'var(--danger)',
+                                                        fontSize: '0.875rem',
+                                                        textTransform: 'none',
+                                                        padding: 0
+                                                    }}
                                                 >
                                                     Удалить
                                                 </button>
