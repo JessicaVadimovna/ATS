@@ -100,11 +100,17 @@ ${JSON.stringify(resumeData, null, 2)}
         return new Promise((resolve) => {
             setTimeout(() => {
                 const hasReact = jobDescription.toLowerCase().includes('react');
-                const baseScore = Math.floor(Math.random() * 20) + 70;
+
+                // Детерминированная оценка: чем больше навыков и описания, тем выше балл
+                const skillScore = resumeData.skills.length * 2;
+                const expScore = resumeData.experience.reduce((acc, exp) => acc + (exp.description?.length || 0) / 50, 0);
+                // Базовый балл 60 + заслуги, максимум 98
+                const calculatedScore = Math.min(98, Math.floor(60 + skillScore + expScore));
+
                 const dynamicSuggestions: ActionableSuggestion[] = [];
 
                 dynamicSuggestions.push({
-                    id: `ai-sug-${Date.now()}-limit`, text: "⚠️ [AI отключен] Лимит бесплатного Gemini API на сегодня исчерпан. Это демонстрационные советы, показывающие как работает логика применения изменений в редактор.", type: 'add_skill', payload: { name: 'Demo Mode', level: 1 }, isApplied: false
+                    id: `ai-sug-${Date.now()}-limit`, text: "⚠️ [AI отключен из-за лимита API. Это ДЕМО-режим] Вы превысили секундный лимит запросов сервера. Эти советы показывают логику работы интерфейса. Нажмите 'Применить', а затем снова 'Анализировать' - и вы увидите как ваш балл вырастет!", type: 'add_skill', payload: { name: 'Demo Mode', level: 1 }, isApplied: false
                 });
 
                 if (hasReact && !resumeData.skills.some(s => s.name.toLowerCase().includes('redux'))) {
@@ -125,7 +131,7 @@ ${JSON.stringify(resumeData, null, 2)}
                     id: `ai-sug-${Date.now()}-3`, text: "[Mock] Сделайте 'Summary' сфокусированным на бизнес-результатах.", type: 'update_summary', payload: { newSummary: (resumeData.personalInfo.summary || '') + ' Проектирую масштабируемую архитектуру Frontend-приложений с нуля до Production.' }, isApplied: false
                 });
 
-                resolve({ score: baseScore, suggestions: dynamicSuggestions });
+                resolve({ score: calculatedScore, suggestions: dynamicSuggestions });
             }, 1000);
         });
     }
