@@ -15,38 +15,18 @@ const SECTION_ORDER_KEY = 'ats_section_order';
 
 const initialData: ResumeData = {
     personalInfo: {
-        fullName: 'Иван Иванов',
-        title: 'Frontend Developer',
-        email: 'ivan@example.com',
-        phone: '+7 999 123-45-67',
-        location: 'Москва, Россия',
-        summary: 'Решаю сложные задачи с помощью React и TypeScript. Увлекаюсь UI/UX дизайном и оптимизацией производительности.',
-        github: 'github.com/ivan',
-        linkedin: 'linkedin.com/in/ivan',
+        fullName: '',
+        title: '',
+        email: '',
+        phone: '',
+        location: '',
+        summary: '',
+        github: '',
+        linkedin: '',
     },
-    experience: [
-        {
-            id: 'exp-1',
-            company: 'Tech Corp',
-            position: 'Senior Frontend Developer',
-            startDate: '2021-01',
-            endDate: '2023-12',
-            description: 'Разработка архитектуры приложения. Управление командой из 3 разработчиков. Внедрение CI/CD.',
-        },
-    ],
-    education: [
-        {
-            id: 'edu-1',
-            institution: 'МГТУ им. Баумана',
-            degree: 'Информатика и вычислительная техника, Бакалавр',
-            startDate: '2015-09',
-            endDate: '2019-06',
-        },
-    ],
-    skills: [
-        { id: 'skill-1', name: 'React', level: 5 },
-        { id: 'skill-2', name: 'TypeScript', level: 4 },
-    ],
+    experience: [],
+    education: [],
+    skills: [],
 };
 
 const defaultSectionOrder: SectionId[] = ['personalInfo', 'experience', 'education', 'skills'];
