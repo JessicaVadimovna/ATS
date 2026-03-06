@@ -81,23 +81,31 @@ ${JSON.stringify(resumeData, null, 2)}
         const msg: string = error?.message || String(error);
         console.error("[AI] Ошибка:", msg);
 
-        // Если сервер ответил ошибкой (SERVER:...) — показываем реальную причину, NOT mock
-        if (msg.startsWith('SERVER:')) {
+        // Если лимит токенов Gemini исчерпан (429) — показываем Mock, чтобы портфолио продолжало работать для HR/гостей!
+        if (msg.includes('429') || msg.toLowerCase().includes('quota') || msg.toLowerCase().includes('resource_exhausted')) {
+            console.warn("[AI] Лимит API исчерпан. Включаю демонстрационный режим для портфолио...");
+            // не ставим backendFailed = true чтобы пошел дальше в mock
+        }
+        // Если другая критичная серверная ошибка (например 403, 500) — показываем реальную причину
+        else if (msg.startsWith('SERVER:')) {
             backendFailed = true;
             throw new Error(`Ошибка AI-сервера: ${msg.replace('SERVER:', '')}`);
+        } else {
+            console.warn("[AI] Ошибка сети или сервер недоступен, включаю локальный Mock...");
         }
-
-        // Иначе — сетевая ошибка (localhost без Vercel CLI), показываем mock
-        console.warn("[AI] Сервер недоступен по сети, включаю локальный Mock...");
     }
 
-    // Mock fallback (только для локальной разработки без Vercel CLI)
+    // Mock fallback (лимит API или локальная разработка)
     if (!backendFailed) {
         return new Promise((resolve) => {
             setTimeout(() => {
                 const hasReact = jobDescription.toLowerCase().includes('react');
                 const baseScore = Math.floor(Math.random() * 20) + 70;
                 const dynamicSuggestions: ActionableSuggestion[] = [];
+
+                dynamicSuggestions.push({
+                    id: `ai-sug-${Date.now()}-limit`, text: "⚠️ [AI отключен] Лимит бесплатного Gemini API на сегодня исчерпан. Это демонстрационные советы, показывающие как работает логика применения изменений в редактор.", type: 'add_skill', payload: { name: 'Demo Mode', level: 1 }, isApplied: false
+                });
 
                 if (hasReact && !resumeData.skills.some(s => s.name.toLowerCase().includes('redux'))) {
                     dynamicSuggestions.push({

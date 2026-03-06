@@ -29,27 +29,30 @@ export default async function handler(req, res) {
 
     try {
         // Забираем ключ СТРОГО ИЗ ПЕРЕМЕННЫХ ОКРУЖЕНИЯ VERCEL (Сейфа)
-        const API_KEY = process.env.GEMINI_API_KEY;
+        const API_KEY = process.env.GROQ_API_KEY || process.env.HF_API_KEY || process.env.GEMINI_API_KEY;
 
         if (!API_KEY) {
-            console.error("CRITICAL: GEMINI_API_KEY environment variable is missing.");
+            console.error("CRITICAL: GROQ_API_KEY environment variable is missing.");
             return res.status(500).json({ error: 'API Key is not configured on the server.' });
         }
 
-        // Делаем прямой запрос к Gemini от лица этого сервера (не из браузера пользователя!)
-        // Используем современную дефолтную модель: gemini-2.0-flash
+        // Делаем запрос к сверхбыстрому Groq API (Llama 3)
         const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
+            "https://api.groq.com/openai/v1/chat/completions",
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${API_KEY}`
                 },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }],
-                    generationConfig: {
-                        temperature: 0.2, // Минимум креативности, чтобы JSON не сломался
-                    }
+                    model: "llama3-8b-8192", // Бесплатная, сверхбыстрая модель
+                    messages: [
+                        { role: "system", content: "You are an ATS expert. Always output pure JSON." },
+                        { role: "user", content: prompt }
+                    ],
+                    temperature: 0.2, // Минимум креативности для JSON
+                    response_format: { type: "json_object" } // Groq поддерживает принудительный вывод JSON
                 }),
             }
         );
@@ -57,15 +60,15 @@ export default async function handler(req, res) {
         const data = await response.json();
 
         if (!response.ok) {
-            console.error("Gemini API Error details:", data);
+            console.error("Groq API Error details:", data);
             return res.status(response.status).json({
-                error: 'Error from Gemini API',
+                error: 'Error from API',
                 details: data
             });
         }
 
-        // Извлекаем текст ответа
-        const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        // Groq отдает ответ в формате OpenAI
+        const responseText = data.choices?.[0]?.message?.content || "";
 
         // Очищаем от возможных Markdown тегов
         const cleanedText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
