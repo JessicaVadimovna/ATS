@@ -49,7 +49,7 @@ const Preview: React.FC = () => {
     };
 
     return (
-        <div ref={containerRef} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: '1.5rem' }}>
+        <div ref={containerRef} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', overflowX: 'hidden', gap: '1.5rem' }}>
 
             {/* Toolbar */}
             <div style={{
@@ -86,7 +86,8 @@ const Preview: React.FC = () => {
 
             {/* A4 Container Scaler */}
             <div style={{
-                width: '794px',
+                width: '100%',
+                maxWidth: '794px',
                 height: `${1123 * scale}px`, // Reserve exact scaled height so layout doesn't jump
                 position: 'relative',
                 display: 'flex',
