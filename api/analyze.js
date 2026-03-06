@@ -46,7 +46,7 @@ export default async function handler(req, res) {
                     "Authorization": `Bearer ${API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: "llama3-8b-8192", // Бесплатная, сверхбыстрая модель
+                    model: "llama-3.1-8b-instant", // Современная поддерживаемая модель
                     messages: [
                         { role: "system", content: "You are an ATS expert. Always output pure JSON." },
                         { role: "user", content: prompt }
